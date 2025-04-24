@@ -1,20 +1,31 @@
-<<<<<<< HEAD
-# my_fyp
+# 🎓 Flutter FYP – Smart Degree Recommendation System
 
-A new Flutter project.
+Welcome to my Final Year Project! This is a **cross-platform Flutter application** designed to help students discover degree programs that match their interests, skills, and career goals using modern UI, Firebase, and intelligent logic.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🚀 Features
 
-A few resources to get you started if this is your first Flutter project:
+- 🔍 **AI-based Degree Recommendation**
+- 💬 Real-time **Discussion Forum** (Firebase Firestore)
+- 🧾 Account creation & authentication
+- 📊 User dashboards for activity tracking
+- 🛍️ Shopping behavior–based suggestions (experimental)
+- 🌐 Works on Android, Web, and Desktop
+- 💡 Beautiful UI/UX with smooth animations
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-=======
-# Project
->>>>>>> b8fdf9e0d913e6b4ee73ca8e579df6f951903757
+## 🛠 Tech Stack
+
+| Layer         | Technology             |
+|--------------|------------------------|
+| Frontend     | Flutter (Dart)         |
+| Backend      | Firebase (Auth, Firestore, Storage) |
+| Server Logic | Node.js (external APIs, optional) |
+| State Mgmt   | Provider / Riverpod    |
+| Design       | Custom Widgets + Animations |
+
+---
+
+
