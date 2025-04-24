@@ -1,0 +1,30 @@
+{
+    "project_info": {
+      "project_number": "392400066599",
+      "project_id": "emanfyp-34a8d",
+      "storage_bucket": "emanfyp-34a8d.appspot.com"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:392400066599:android:58f3d91220c3afd18e9602",
+          "android_client_info": {
+            "package_name": "com.example.my_fyp"
+          }
+        },
+        "oauth_client": [],
+        "api_key": [
+          {
+            "current_key": "AIzaSyDVk5ku9RMXsGqka72Z3attst5uUE4li6U"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": []
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }
+  
