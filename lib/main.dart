@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:my_fyp/chatbot.dart';
+
+import 'package:my_fyp/signInScreen.dart';
 //import 'package:my_fyp/homeScreen.dart';
 import 'package:my_fyp/splashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:my_fyp/top.dart';
+
+import 'homeScreen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +42,6 @@ class MyApp extends StatelessWidget {
           ),
           useMaterial3: true,
         ),
-        home: SplashScreen());
+        home: HomeScreen(),);
   }
 }

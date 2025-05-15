@@ -1,30 +1,119 @@
 {
-    "project_info": {
-      "project_number": "392400066599",
-      "project_id": "emanfyp-34a8d",
-      "storage_bucket": "emanfyp-34a8d.appspot.com"
-    },
-    "client": [
-      {
-        "client_info": {
-          "mobilesdk_app_id": "1:392400066599:android:58f3d91220c3afd18e9602",
-          "android_client_info": {
-            "package_name": "com.example.my_fyp"
-          }
-        },
-        "oauth_client": [],
-        "api_key": [
-          {
-            "current_key": "AIzaSyDVk5ku9RMXsGqka72Z3attst5uUE4li6U"
-          }
-        ],
-        "services": {
-          "appinvite_service": {
-            "other_platform_oauth_client": []
-          }
+  "project_info": {
+    "project_number": "392400066599",
+    "firebase_url": "https://emanfyp-34a8d-default-rtdb.firebaseio.com",
+    "project_id": "emanfyp-34a8d",
+    "storage_bucket": "emanfyp-34a8d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:392400066599:android:662408e789f881298e9602",
+        "android_client_info": {
+          "package_name": "com.example.fyp_portal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "392400066599-5bh96libv93eejkto1tpm904j7p0290h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVk5ku9RMXsGqka72Z3attst5uUE4li6U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "392400066599-5bh96libv93eejkto1tpm904j7p0290h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "392400066599-l1loaql3pno8egr7penkvfq0a486ndsu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.testapp"
+              }
+            }
+          ]
         }
       }
-    ],
-    "configuration_version": "1"
-  }
-  
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:392400066599:android:19fba4f9b0a012f78e9602",
+        "android_client_info": {
+          "package_name": "com.example.my_fyp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "392400066599-5bh96libv93eejkto1tpm904j7p0290h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVk5ku9RMXsGqka72Z3attst5uUE4li6U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "392400066599-5bh96libv93eejkto1tpm904j7p0290h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "392400066599-l1loaql3pno8egr7penkvfq0a486ndsu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.testapp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:392400066599:android:e3b4a16783f2646f8e9602",
+        "android_client_info": {
+          "package_name": "com.example.testapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "392400066599-5bh96libv93eejkto1tpm904j7p0290h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVk5ku9RMXsGqka72Z3attst5uUE4li6U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "392400066599-5bh96libv93eejkto1tpm904j7p0290h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "392400066599-l1loaql3pno8egr7penkvfq0a486ndsu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.testapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

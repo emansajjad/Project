@@ -1,144 +1,157 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'VideoPlayer.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:video_player/video_player.dart';
+import 'Video_player.dart';
 
-class Videos extends StatefulWidget {
-  const Videos({super.key});
+class VideosScreen extends StatefulWidget {
+  const VideosScreen({super.key});
 
   @override
-  State<Videos> createState() => _VideosState();
+  State<VideosScreen> createState() => _VideosScreenState();
 }
 
-class _VideosState extends State<Videos> {
-  final Map<String, List<Map<String, String>>> videoLinks = {
-    "ECAT": [
-      {
-        "url": "https://www.youtube.com/watch?v=cBbXbRpP84Q",
-        "title": "ECAT Chemistry - Lecture 2"
-      },
-      {
-        "url": "https://www.youtube.com/watch?v=gV1G2zLwFUo",
-        "title": "ECAT Maths - Lecture 3"
-      },
-      {
-        "url": "https://www.youtube.com/watch?v=VqoPBg21E-I",
-        "title": "ECAT English - Lecture 4"
-      },
-    ],
-    "MDCAT": [
-      {
-        "url": "https://youtu.be/L7LGaLZoOu0?si=cm9urF8xM_xI5G9L",
-        "title": "ECAT Physics - Lecture 1"
-      },
-      {
-        "url": "https://youtu.be/7H_bXAlyMJI?si=3cpn74zLchpGvl05",
-        "title": "ECAT Chemistry - Lecture 2"
-      },
-      {
-        "url": "https://youtu.be/ZNzA5K_7NOM?si=_ZKrcGVSBsSEzx6S",
-        "title": "ECAT Maths - Lecture 3"
-      },
-      {
-        "url": "https://youtu.be/NNp550FBRDk?si=Zdp8qDtoJi3EQaQ-",
-        "title": "ECAT English - Lecture 4"
-      },
-    ],
-    // Additional categories omitted for brevity
-  };
+class VideoItem {
+  final VideoPlayerController controller;
+  final String title;
 
-  String getThumbnailUrl(String videoUrl) {
+  VideoItem({required this.controller, required this.title});
+}
+
+class _VideosScreenState extends State<VideosScreen> {
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  List<VideoItem> _videoItems = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadVideos();
+  }
+
+  Future<void> _loadVideos() async {
     try {
-      Uri uri = Uri.parse(videoUrl);
-      if (uri.queryParameters.containsKey('v')) {
-        final videoId = uri.queryParameters['v'];
-        return 'https://img.youtube.com/vi/$videoId/0.jpg';
-      } else if (uri.pathSegments.isNotEmpty) {
-        final videoId = uri.pathSegments.last;
-        return 'https://img.youtube.com/vi/$videoId/0.jpg';
+      final result = await _storage.ref('Videos').listAll();
+      for (var item in result.items) {
+        if (item.name.endsWith('.mp4')) {
+          final url = await item.getDownloadURL();
+          final title = _formatTitle(item.name);
+          final controller = VideoPlayerController.network(url);
+          await controller.initialize();
+          controller.setVolume(0); // mute thumbnail preview
+          _videoItems.add(VideoItem(controller: controller, title: title));
+        }
       }
     } catch (e) {
-      print("Error parsing video URL: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('❌ Error loading videos: $e')),
+        );
+      }
     }
-    return 'https://via.placeholder.com/150/000000/FFFFFF/?text=No+Thumbnail';
+
+    if (mounted) setState(() => _isLoading = false);
+  }
+
+  String _formatTitle(String fileName) {
+    final nameWithoutExtension = fileName.replaceAll('.mp4', '');
+    return nameWithoutExtension
+        .replaceAll('_', ' ')
+        .replaceAll('-', ' ')
+        .split(' ')
+        .map((word) => word[0].toUpperCase() + word.substring(1))
+        .join(' ');
+  }
+
+  @override
+  void dispose() {
+    for (var item in _videoItems) {
+      item.controller.dispose();
+    }
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue.shade50,
-      body: SingleChildScrollView(
-        child: ListView.builder(
-          shrinkWrap:
-              true, // Ensures ListView takes only as much space as needed
-          itemCount: videoLinks.keys.length,
-          itemBuilder: (context, index) {
-            String category = videoLinks.keys.elementAt(index);
-            List<Map<String, String>> links = videoLinks[category]!;
-            print("Category: $category, Number of videos: ${links.length}");
 
-            return Card(
-              color: Colors.white,
-              elevation: 6,
-              shadowColor: Colors.blueAccent,
-              margin: const EdgeInsets.all(8.0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+      backgroundColor: Colors.white,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _videoItems.isEmpty
+          ? const Center(child: Text('No videos found.'))
+          : ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: _videoItems.length,
+        itemBuilder: (context, index) {
+          final item = _videoItems[index];
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => VideoPlayerScreen(videoUrl: item.controller.dataSource),
+                ),
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
+                ],
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      category,
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blueAccent,
+              child: Row(
+                children: [
+                  // Thumbnail
+                  ClipRRect(
+                    borderRadius: const BorderRadius.horizontal(left: Radius.circular(16)),
+                    child: Container(
+                      width: 120,
+                      height: 80,
+                      color: Colors.black12,
+                      child: FittedBox(
+                        fit: BoxFit.cover,
+                        child: SizedBox(
+                          width: item.controller.value.size.width,
+                          height: item.controller.value.size.height,
+                          child: VideoPlayer(item.controller),
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 8.0),
-                    ...links.map((video) {
-                      String thumbnailUrl = getThumbnailUrl(video["url"]!);
-                      return ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 12.0),
-                        leading: CachedNetworkImage(
-                          imageUrl: thumbnailUrl,
-                          width: 80,
-                          height: 80,
-                          fit: BoxFit.cover,
+                  ),
+
+                  // Title
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      child: Text(
+                        item.title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
                         ),
-                        title: Text(
-                          video["title"]!,
-                          style: const TextStyle(
-                              fontSize: 16, color: Colors.black87),
-                        ),
-                        onTap: () {
-                          final videoUrl = video["url"];
-                          final description = video["title"];
-                          if (videoUrl != null && description != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VideoPlayers(
-                                  videoUrl: videoUrl,
-                                  description: description,
-                                ),
-                              ),
-                            );
-                          } else {
-                            print("Error: Video URL or description is null.");
-                          }
-                        },
-                      );
-                    }),
-                  ],
-                ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.only(right: 12),
+                    child: Icon(Icons.play_circle_fill, color: Colors.redAccent, size: 30),
+                  ),
+                ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

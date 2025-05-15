@@ -1,124 +1,198 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:google_generative_ai/google_generative_ai.dart' as GAI;
 
-const String Gemini_API_KEY =
-    "AIzaSyC53sNh2slhRGxnBqujM5U_Ld1xHecdwD0"; // Gemini API Key
+import 'const.dart'; // Make sure you have your Gemini_Api_KEY inside const.dart
 
 class Chatbot extends StatefulWidget {
-  const Chatbot({super.key});
+  const Chatbot({Key? key}) : super(key: key);
 
   @override
   State<Chatbot> createState() => _ChatbotState();
 }
 
 class _ChatbotState extends State<Chatbot> {
-  final TextEditingController _controller = TextEditingController();
-  final List<Map<String, String>> _messages = [];
+  bool isTyping = false;
+  final TextEditingController promptController = TextEditingController();
+  List<ChatMessage> messages = [];
 
-  void _sendMessage(String message) async {
-    if (message.trim().isEmpty) return;
+  @override
+  void initState() {
+    super.initState();
+    messages.add(ChatMessage(
+      sender: MessageSender.Bot,
+      text: 'Hi admission seekers...',
+    ));
+  }
+
+  Future<void> interactWithModel() async {
+    final model = GAI.GenerativeModel(model: 'gemini-1.5-flash', apiKey: Gemini_Api_KEY);
+
+    final promptText = promptController.text.trim()+' give short and concise answer in plain text without headings and answer in term of education purpose specifically uni students if not then say that bounded for educational purpose';
+    if (promptText.isEmpty) return;
 
     setState(() {
-      _messages.add({"sender": "user", "message": message});
+      messages.add(ChatMessage(
+        sender: MessageSender.User,
+        text: promptController.text.trim(),
+      ));
+      messages.add(ChatMessage(
+        sender: MessageSender.Bot,
+        text: '...',
+      ));
+      isTyping = true;
     });
 
-    _controller.clear();
+    promptController.clear();
 
-    try {
-      final response = await http.post(
-        Uri.parse(
-            'https://api.gemini.com/v1/completions'), // Replace with Gemini API endpoint
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer "AIzaSyC53sNh2slhRGxnBqujM5U_Ld1xHecdwD0"', // Using the API key for authorization
-        },
-        body: json.encode({
-          'model': 'gemini-3', // Replace with correct model
-          'prompt': message, // The message sent to the API
-          'max_tokens': 100,
-        }),
-      );
+    final prompt = GAI.TextPart(promptText);
+    final content = GAI.Content.text(prompt.text);
+    final response = await model.generateContent([content]);
 
-      if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        final botReply = responseData['choices'][0]['text'].trim();
-
-        setState(() {
-          _messages.add({"sender": "bot", "message": botReply});
-        });
-      } else {
-        setState(() {
-          _messages.add(
-              {"sender": "bot", "message": "Error: Unable to get response."});
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _messages.add({"sender": "bot", "message": "Error: $e"});
-      });
-    }
+    setState(() {
+      messages.removeLast();
+      messages.add(ChatMessage(
+        sender: MessageSender.Bot,
+        text: response.text ?? "Sorry, I couldn't understand that.",
+      ));
+      isTyping = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Quiz Generation"),
-        backgroundColor: Colors.blue,
+        title: const Text('UniQuest Chatbot', style: TextStyle(color: Colors.white),),
+        centerTitle: true,
       ),
       body: Column(
-        children: [
+        children: <Widget>[
           Expanded(
             child: ListView.builder(
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                final message = _messages[index];
-                final isUser = message["sender"] == "user";
-                return Align(
-                  alignment:
-                      isUser ? Alignment.centerRight : Alignment.centerLeft,
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: isUser ? Colors.blue : Colors.grey[300],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      message["message"]!,
-                      style: TextStyle(
-                          color: isUser ? Colors.white : Colors.black),
-                    ),
-                  ),
-                );
+              padding: const EdgeInsets.all(8.0),
+              itemCount: messages.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ChatBubble(message: messages[index]);
               },
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 4),
             child: Row(
-              children: [
+              children: <Widget>[
                 Expanded(
+                  
                   child: TextField(
-                    controller: _controller,
-                    decoration: InputDecoration(
-                      hintText: "Type your message...",
+                    controller: promptController,
+                    decoration: const InputDecoration(
+                      labelText: '  Ask a question...',
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
                       ),
+                      
                     ),
                   ),
                 ),
-                SizedBox(width: 10),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () => _sendMessage(_controller.text),
-                ),
+                const SizedBox(width: 8.0),
+                InkWell(
+                    onTap: interactWithModel,
+                    child: CircleAvatar(child: Center(child: Icon(Icons.send, color: Colors.white,)),backgroundColor:  Color.fromARGB(255, 83, 99, 182),)),
+                // ElevatedButton(
+                //   onPressed: interactWithModel,
+                //   child: const Text('Send'),
+                // ),
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+enum MessageSender { User, Bot }
+
+class ChatMessage {
+  final MessageSender sender;
+  final String? text;
+
+  ChatMessage({
+    required this.sender,
+    this.text,
+  });
+}
+
+class ChatBubble extends StatefulWidget {
+  final ChatMessage message;
+
+  const ChatBubble({Key? key, required this.message}) : super(key: key);
+
+  @override
+  State<ChatBubble> createState() => _ChatBubbleState();
+}
+
+class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<int> _dotAnimation;
+  String displayedText = "";
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.message.text == '...') {
+      _controller = AnimationController(
+        duration: const Duration(milliseconds: 900),
+        vsync: this,
+      )..repeat();
+      _dotAnimation = StepTween(begin: 1, end: 3).animate(_controller)
+        ..addListener(() {
+          setState(() {
+            displayedText = '.' * _dotAnimation.value;
+          });
+        });
+    }
+  }
+
+  @override
+  void dispose() {
+    if (widget.message.text == '...') {
+      _controller.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isBot = widget.message.sender == MessageSender.Bot;
+    final bgColor = isBot ? Colors.blueGrey[100] : Colors.blue[100];
+    final text = widget.message.text == '...' ? displayedText : widget.message.text!;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+      child: Row(
+        mainAxisAlignment: isBot ? MainAxisAlignment.start : MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(width: 8.0),
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.7, // Limit width
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 14.0),
+              child: Text(
+                text,
+                style: const TextStyle(fontSize: 16),
+                softWrap: true,
+                overflow: TextOverflow.visible,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8.0),
         ],
       ),
     );

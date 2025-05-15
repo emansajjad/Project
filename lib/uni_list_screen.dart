@@ -66,11 +66,10 @@ class _UniversityListScreenState extends State<UniversityListScreen> {
           'Universities',
           style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: Colors.black), // App bar text styling
+              color: Colors.white), // App bar text styling
         ),
         centerTitle: true, // Centers the title text
-        backgroundColor:
-            const Color.fromARGB(255, 95, 106, 162), // App bar background color
+        backgroundColor: Colors.blue,// App bar background color
       ),
       body: Column(
         children: [

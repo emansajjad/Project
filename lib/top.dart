@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_fyp/books.dart';
 import 'package:my_fyp/quiz.dart';
 import 'package:my_fyp/quizfile.dart';
-import 'package:my_fyp/videoplayer.dart';
+import 'package:my_fyp/Youtube_player.dart';
 import 'package:my_fyp/videos.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -30,17 +30,16 @@ class _TopState extends State<Top> {
 
     return Scaffold(
       backgroundColor:
-          const Color.fromARGB(255, 95, 106, 162), // Set background color
+         Colors.blue, // Set background color
       appBar: AppBar(
         title: const Center(
           child: Text(
             "Test Preparation",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
         ),
         centerTitle: true,
-        backgroundColor:
-            const Color.fromARGB(255, 95, 106, 162), // Replace AppBar color
+        backgroundColor:Colors.blue// Replace AppBar color
       ),
       body: Column(
         children: [
@@ -102,7 +101,7 @@ class _TopState extends State<Top> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => VideoPlayers(
+                                          builder: (context) => YoutubePlayerScreen(
                                             videoUrl: videoUrl,
                                             description:
                                                 "This is a featured video.",
@@ -110,55 +109,45 @@ class _TopState extends State<Top> {
                                         ),
                                       );
                                     },
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 180,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                            'https://img.youtube.com/vi/$videoId/0.jpg',
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          width: double.infinity,
+                                          height: 180,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            image: DecorationImage(
+                                              image: NetworkImage(
+                                                'https://img.youtube.com/vi/$videoId/0.jpg',
+                                              ),
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
-                                          fit: BoxFit.cover,
                                         ),
-                                      ),
+                                        SizedBox(height: 20,),
+                                        Container(
+                                          width: double.infinity,
+                                          height: 180,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            image: DecorationImage(
+                                              image: NetworkImage(
+                                                'https://img.youtube.com/vi/$videoId/0.jpg',
+                                              ),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Text(
-                                    "Best Books",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        color:
-                                            Color.fromARGB(255, 95, 106, 162),
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: GridView.count(
-                                    crossAxisCount: screenWidth > 600
-                                        ? 3
-                                        : 2, // Responsive columns
-                                    crossAxisSpacing: 10,
-                                    mainAxisSpacing: 10,
-                                    padding: const EdgeInsets.all(8.0),
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    children: [
-                                      _buildBookItem(context, "Book 1"),
-                                      _buildBookItem(context, "Book 2"),
-                                      _buildBookItem(context, "Book 3"),
-                                      _buildBookItem(context, "Book 4"),
-                                    ],
-                                  ),
-                                ),
+
                               ],
                             ),
-                            const Videos(),
+                            const VideosScreen(),
                             const Quiz(),
-                            const Books(),
+                            const PdfsScreen(),
                           ],
                         ),
                       ),

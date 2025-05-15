@@ -19,11 +19,11 @@ class _UniversityDetailScreenState extends State<UniversityDetailScreen> {
         title: Text(
           widget.university.university,
           style: const TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 95, 106, 162),
+        backgroundColor: Colors.blue,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

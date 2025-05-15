@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:my_fyp/QueryCenter.dart';
 import 'package:my_fyp/homeScreen.dart';
 import 'package:my_fyp/signUpScreen.dart';
 
