@@ -1,31 +1,39 @@
 # 🎓 Flutter FYP – Smart Degree Recommendation System
 
-Welcome to my Final Year Project! This is a **cross-platform Flutter application** designed to help students discover degree programs that match their interests, skills, and career goals using modern UI, Firebase, and intelligent logic.
+Welcome to my Final Year Project! This is a **Flutter mobile application** designed to help students discover suitable degree programs based on their interests and career goals. It also allows real-time communication through a discussion forum and integrates an AI-powered chatbot for personalized recommendations.
 
 ---
 
 ## 🚀 Features
 
-- 🔍 **AI-based Degree Recommendation**
-- 💬 Real-time **Discussion Forum** (Firebase Firestore)
-- 🧾 Account creation & authentication
-- 📊 User dashboards for activity tracking
-- 🛍️ Shopping behavior–based suggestions (experimental)
-- 🌐 Works on Android, Web, and Desktop
-- 💡 Beautiful UI/UX with smooth animations
+- 🤖 **Chatbot-Based Degree Recommendation**  
+  Get personalized degree suggestions by chatting with a smart AI assistant.
+
+- 💬 **Real-Time Discussion Forum**  
+  Connect with other students and alumni to ask questions and share experiences — powered by Firebase Firestore.
+
+- 🔐 **User Authentication**  
+  Secure login and signup using Firebase Authentication.
+
+- 📄 **Explore University Programs**  
+  Browse universities in Pakistan along with their course outlines and entrance requirements.
+
+- 🎨 **Modern UI/UX**  
+  Smooth animations, intuitive navigation, and a clean, student-focused interface.
 
 ---
 
 ## 🛠 Tech Stack
 
-| Layer         | Technology             |
-|--------------|------------------------|
-| Frontend     | Flutter (Dart)         |
-| Backend      | Firebase (Auth, Firestore, Storage) |
-| Server Logic | Node.js (external APIs, optional) |
-| State Mgmt   | Provider / Riverpod    |
-| Design       | Custom Widgets + Animations |
+| Layer         | Technology                                 |
+|--------------|--------------------------------------------|
+| Frontend     | Flutter (Dart)                             |
+| Backend      | Firebase – Auth, Firestore, Storage        |
+| AI Logic     | Chatbot for Recommendation (rules + logic) |
+| Real-Time    | Firebase Firestore Subscriptions           |
+| Design       | Custom Widgets & Animations                |
 
 ---
 
+> 🎯 Focused on helping Pakistani students make informed academic decisions through smart assistance and real-time collaboration.
 
